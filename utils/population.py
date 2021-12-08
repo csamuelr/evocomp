@@ -103,8 +103,6 @@ class Population:
 
             
         if self.__string:
-            print("Generatin string populagion. ")
-
             for _ in range(self.__np):    
                 individual = IndividualStrig(linf=self.__linf, lsup=self.__lsup, ndim=self.__ndim, nbits=self.__nbits)
                 individual.create()
