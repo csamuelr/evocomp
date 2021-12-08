@@ -54,7 +54,7 @@ class Griewank:
     def compute(self, obj):
         x1, x2 = obj
 
-        return ((x1**2)/4000 + (x2**2)/4000) - ( (cos(x1/sqrt(1)) * cos(x1/sqrt(2))) + 1 )
+        return ((x1**2)/4000 + (x2**2)/4000) -  (cos(x1/sqrt(1)) * cos(x1/sqrt(2))) + 1 
         
 
     def graph(self):
