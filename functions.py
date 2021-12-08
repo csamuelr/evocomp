@@ -37,9 +37,9 @@ class Ackley:
 
         r = self.compute(obj)
              
-        figure = plt.figure(figsize=(15, 15))
+        figure = plt.figure(figsize=(12, 12))
         axis = figure.gca( projection='3d')
-        axis.plot_surface(d, e, r, cmap='jet', shade= "false")
+        axis.plot_surface(d, e, r, cmap='RdBu')
         plt.show()
 
 
@@ -68,9 +68,9 @@ class Griewank:
 
         r = self.compute(obj)
             
-        figure = plt.figure()
+        figure = plt.figure(figsize=(12, 12))
         axis = figure.gca( projection='3d')
-        axis.plot_surface(d, e, r)
+        axis.plot_surface(d, e, r, cmap='RdBu')
         plt.show()
 
 class Trid:
@@ -104,9 +104,9 @@ class Trid:
 
         r = self.compute(obj)
             
-        figure = plt.figure()
+        figure = plt.figure(figsize=(12, 12))
         axis = figure.gca( projection='3d')
-        axis.plot_surface(d, e, r)
+        axis.plot_surface(d, e, r, cmap='RdBu')
         plt.show()
 
     def global_minimun(self):
