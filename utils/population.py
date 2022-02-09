@@ -1,125 +1,149 @@
+from numpy import array
 from numpy.random import randint
 from numpy.random import normal
+from numpy.random import uniform
 
 
 class Individual:
 
-    def __init__(self, ndim, linf, lsup):
-        self.__ndim = ndim
-        self.__fit  = None
-        self.__gene = []
-        self.__linf = linf
-        self.__lsup = lsup
+	def __init__(self, ndim, linf, lsup):
+		self.__ndim = ndim
+		self.__fit  = None
+		self.__gene = []
+		self.__linf = linf
+		self.__lsup = lsup
 
 
-    def create(self):
-        self.__gene = randint(self.__linf, self.__lsup, self.__ndim)
-        
-    def get(self):
-        return self.__gene
-    
-    def set(self, gen):
-        self.__gene = gen
+	def create(self):
 
-    def get_fit(self):
-        return self.__fit
+		temp = []
+		for i in range(self.__ndim):
+			x = int(self.__linf + uniform()*(self.__lsup - self.__linf))
+			temp.append(x)
 
-    def set_fit(self, f):
-        self.__fit = f
+		self.__gene = array(temp)
+		
+	def get(self):
+		return self.__gene
+	
+	def set(self, gen):
+		self.__gene = gen
 
-    def __repr__(self):
-        return 'Gene: {} Fitness: {}'.format(self.__gene, self.__fit)
+	def get_fit(self):
+		return self.__fit
 
-    def __lt__(self, other):
-        return self.get_fit() < other.get_fit()
+	def set_fit(self, f):
+		self.__fit = f
 
-    def __gt__(self, other):
-        return other.__lt__(self)
+	# def __repr__(self):
+	# 	return 'Gene: {} Fitness: {}'.format(self.__gene, self.__fit)
 
-    def __eq__(self, other):
-        return self.get_fit() == other.get_fit()
-    
-    def __ne__(self, other):
-        return not self.__eq__(other)
+	def __lt__(self, other):
+		return self.get_fit() < other.get_fit()
+
+	def __gt__(self, other):
+		return other.__lt__(self)
+
+	def __eq__(self, other):
+		return self.get_fit() == other.get_fit()
+	
+	def __ne__(self, other):
+		return not self.__eq__(other)
 
 class IndividualStrig:
 
-    def __init__(self, ndim, linf, lsup, nbits):
-        self.__ndim = ndim
-        self.__fit  = None
-        self.__gene = []
-        self.__linf = linf
-        self.__lsup = lsup
-        self.__nbits = nbits
+	def __init__(self, ndim, linf, lsup, nbits):
+		self.__ndim = ndim
+		self.__fit  = None
+		self.__gene = []
+		self.__linf = linf
+		self.__lsup = lsup
+		self.__nbits = nbits
 
 
-    def create(self):
-        
-        g = []
+	def create(self):
+		
+		g = []
 
-        for i in range(self.__ndim):
-            gd = '0b'
-            for j in range(self.__nbits):
-                r = normal(0, 1)
-                if r < 0.5:
-                    gd += '0'
-                else:
-                    gd += '1'
+		for i in range(self.__ndim):
+			gd = '0b'
+			for j in range(self.__nbits):
+				r = normal(0, 1)
+				if r < 0.5:
+					gd += '0'
+				else:
+					gd += '1'
 
-            g.append(gd)
+			g.append(gd)
 
-        self.__gene = g
+		self.__gene = g
 
-        
-    def get(self):
-        return self.__gene
-    
-    def set(self, gen):
-        self.__gene = gen
+		
+	def get(self):
+		return self.__gene
+	
+	def set(self, gen):
+		self.__gene = gen
 
-    def get_fit(self):
-        return self.__fit
+	def get_fit(self):
+		return self.__fit
 
-    def set_fit(self, f):
-        self.__fit = f
+	def set_fit(self, f):
+		self.__fit = f
 
-    def __repr__(self):
-        return 'Gene: {} Fitness: {}'.format(self.__gene, self.__fit)
+	# def __repr__(self):
+	# 	return 'Gene: {} Fitness: {}'.format(self.__gene, self.__fit)
 
   
 
 class Population:
 
-    def __init__(self, np, linf, lsup, ndim, string=False, nbits=None):
-        self.__np = np
-        self.__individuals = []
-        self.__linf = linf
-        self.__lsup = lsup
-        self.__ndim = ndim
-        self.__nbits = nbits
-        self.__string = string
+	def __init__(self, np, linf, lsup, ndim, string=False, nbits=None):
+		self.__np = np
+		self.__individuals = []
+		self.__linf = linf
+		self.__lsup = lsup
+		self.__ndim = ndim
+		self.__nbits = nbits
+		self.__string = string
 
-    def create(self):
+	def create(self):
 
-            
-        if self.__string:
-            for _ in range(self.__np):    
-                individual = IndividualStrig(linf=self.__linf, lsup=self.__lsup, ndim=self.__ndim, nbits=self.__nbits)
-                individual.create()
-                self.__individuals.append(individual)
+			
+		if self.__string:
+			for _ in range(self.__np):    
+				individual = IndividualStrig(linf=self.__linf, lsup=self.__lsup, ndim=self.__ndim, nbits=self.__nbits)
+				individual.create()
+				self.__individuals.append(individual)
 
+		else:
+			for _ in range(self.__np):    
+				individual = Individual(linf=self.__linf, lsup=self.__lsup, ndim=self.__ndim)
+				individual.create()
+				self.__individuals.append(individual)
 
-        else:
+		return self.__individuals
 
-            for _ in range(self.__np):    
-                individual = Individual(linf=self.__linf, lsup=self.__lsup, ndim=self.__ndim)
-                individual.create()
-                self.__individuals.append(individual)
+	def get(self):
+		return self.__individuals
 
-        return self.__individuals
+	def opposite(self, individuals):
 
-    def get(self):
-        return self.__individuals
+		oppindividuals = []
+		
+		for i in individuals:
+			
+			gtemp = []
+			for x in i.get():
+				xx = self.__lsup + self.__linf - x
+				gtemp.append(xx)
 
-    def __repr__(self) -> str:
-        return 'Population Size: {}'.format(self.__np)
+			oppindv = Individual(self.__ndim, self.__lsup, self.__ndim)
+			oppindv.set(array(gtemp))
+			oppindv.set_fit(None)
+			oppindividuals.append(oppindv)
+
+		return oppindividuals
+	
+	# def __repr__(self) -> str:
+	# 	return 'Population Size: {}'.format(self.__np)
